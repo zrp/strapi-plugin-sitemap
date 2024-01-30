@@ -28,9 +28,14 @@ const getFieldsFromConfig = (contentType, topLevel = false, isLocalized = false,
   let fields = [];
 
   if (contentType) {
-    Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
+    Object.entries(contentType['languages']).map(([langcode, { pattern, subTypeNews, subTypeNewsTitle }]) => {
       fields.push(...getService('pattern').getFieldsFromPattern(pattern, topLevel, relation));
+      if (subTypeNews === true) {
+        fields.push(subTypeNewsTitle);
+        fields.push('publishedAt');
+      }
     });
+
   }
 
   if (topLevel) {

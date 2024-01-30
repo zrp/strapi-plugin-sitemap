@@ -11,6 +11,7 @@ import {
   Checkbox,
   Combobox,
   ComboboxOption,
+  TextInput,
 } from '@strapi/design-system';
 
 import SelectContentTypes from '../../SelectContentTypes';
@@ -88,6 +89,38 @@ const CollectionForm = (props) => {
                 onChange={(value) => handleSelectChange(uid, value)}
                 value={langcode}
               />
+            </GridItem>
+            <GridItem col={12}>
+              <Checkbox
+                onValueChange={(value) => onChange(uid, langcode, 'subTypeNews', value)}
+                value={modifiedState.getIn([uid, 'languages', langcode, 'subTypeNews'], false)}
+                disabled={!uid || (contentTypes[uid].locales && !langcode)}
+                hint={formatMessage({ id: 'sitemap.Settings.Field.SubTypeNews.Description', defaultMessage: 'Adds a <news> tag to all the URLs of this type.' })}
+              >
+                {formatMessage({ id: 'sitemap.Settings.Field.SubTypeNews.Label', defaultMessage: 'News' })}
+              </Checkbox>
+              <TextInput
+                label={formatMessage({ id: 'sitemap.Settings.Field.SubTypeNewsName.Label', defaultMessage: 'News Name' })}
+                name="subTypeNewsName"
+                value={modifiedState.getIn([uid, 'languages', langcode, 'subTypeNewsName'])}
+                hint={formatMessage({ id: 'sitemap.Settings.Field.SubTypeNewsName.Description', defaultMessage: 'The <news:name> tag is the name of the news publication. It must exactly match the name as it appears on your articles, omitting anything in parentheses.' })}
+                disabled={!uid || (contentTypes[uid].locales && !langcode) || !modifiedState.getIn([uid, 'languages', langcode, 'subTypeNews'], false)}
+                onChange={(e) => {
+                  onChange(uid, langcode, 'subTypeNewsName', e.target.value);
+                }}
+              />
+              <Select
+                name="subTypeNewsTitle"
+                label={formatMessage({ id: 'sitemap.Settings.Field.SubTypeNewsTitle.Label', defaultMessage: 'News Title' })}
+                hint={formatMessage({ id: 'sitemap.Settings.Field.SubTypeNewsTitle.Description', defaultMessage: 'The title of the news article.' })}
+                disabled={!uid || (contentTypes[uid].locales && !langcode) || !modifiedState.getIn([uid, 'languages', langcode, 'subTypeNews'], false)}
+                onChange={(value) => onChange(uid, langcode, 'subTypeNewsTitle', value)}
+                value={modifiedState.getIn([uid, 'languages', langcode, 'subTypeNewsTitle'])}
+              >
+                {contentTypes[uid]?.attributes.map((option) => (
+                  <Option value={option} key={`subTypeNewsTitle-${option}`}>{option}</Option>
+                ))}
+              </Select>
             </GridItem>
           </Grid>
         </GridItem>

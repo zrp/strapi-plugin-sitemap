@@ -4,6 +4,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 
+const { PassThrough } = require('stream');
 const { getService } = require('../utils');
 
 /**
@@ -31,9 +32,14 @@ module.exports = {
     const contentTypes = {};
 
     await Promise.all(Object.values(strapi.contentTypes).reverse().map(async (contentType) => {
-      if (strapi.config.get('plugin.sitemap.excludedTypes').includes(contentType.uid)) return;
+      if (strapi.config.get('plugin.sitemap.excludedTypes').some((uid) => contentType.uid.startsWith(uid))) return;
       contentTypes[contentType.uid] = {
         displayName: contentType.globalId,
+        attributes: Object.entries(contentType.attributes)
+          .reduce((acc, [key, value]) => {
+            if (value.type === 'string') acc.push(key);
+            return acc;
+          }, []),
       };
 
       if (strapi.plugin('i18n') && _.get(contentType, 'pluginOptions.i18n.localized')) {

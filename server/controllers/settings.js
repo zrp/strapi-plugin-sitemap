@@ -28,9 +28,7 @@ module.exports = {
       .set({ key: 'settings', value: ctx.request.body });
 
     // Load lifecycle methods for auto generation of sitemap.
-    await newContentTypes.map(async (contentType) => {
-      await getService('lifecycle').loadLifecycleMethod(contentType);
-    });
+    await Promise.all(newContentTypes.map((contentType) => getService('lifecycle').loadLifecycleMethod(contentType)));
 
     ctx.send({ ok: true });
   },

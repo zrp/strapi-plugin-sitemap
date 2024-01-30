@@ -4,7 +4,7 @@
  * Sitemap service.
  */
 
-const { getConfigUrls } = require('@strapi/utils');
+const { getAbsoluteServerUrl } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
@@ -61,7 +61,6 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
  * @param {object} config - The config object.
  * @param {object} page - The entity.
  * @param {string} contentType - The model of the entity.
- * @param {bool} excludeDrafts - Whether to exclude drafts.
  *
  * @returns {object} The sitemap entry data.
  */
@@ -97,6 +96,19 @@ const getSitemapPageData = async (config, page, contentType) => {
 
   if (config.contentTypes[contentType]['languages'][locale].includeLastmod === false) {
     delete pageData.lastmod;
+  }
+
+  if (config.contentTypes[contentType]['languages'][locale].subTypeNews === true) {
+    Object.assign(pageData, {
+      news: {
+        publication: {
+          name: config.contentTypes[contentType]['languages'][locale].subTypeNewsName,
+          language: locale,
+        },
+        title: page[config.contentTypes[contentType]['languages'][locale].subTypeNewsTitle],
+        publication_date: page.publishedAt,
+      },
+    });
   }
 
   return pageData;
@@ -206,9 +218,20 @@ const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
   const LIMIT = strapi.config.get('plugin.sitemap.limit');
   const enableXsl = strapi.config.get('plugin.sitemap.xsl');
-  const { serverUrl } = getConfigUrls(strapi.config);
+  const { serverUrl } = getAbsoluteServerUrl(strapi.config);
 
-  const xslObj = {};
+  const xslObj = {
+    xmlns: { // trim the xml namespace
+      news: true, // flip to false to omit the xml namespace for news
+      xhtml: true,
+      image: true,
+      video: true,
+      custom: [
+        'xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"',
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+      ],
+    },
+  };
 
   if (enableXsl) {
     xslObj.xslUrl = 'xsl/sitemap.xsl';
@@ -243,7 +266,7 @@ const getSitemapStream = async (urlCount) => {
             });
           });
 
-        return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream];
+        return [new URL(path, serverUrl || config.hostname || 'http://localhost:1337').toString(), sitemapStream];
       },
     }), true];
   }

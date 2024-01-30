@@ -84,7 +84,15 @@ const ModalForm = (props) => {
   const form = () => {
     switch (type) {
       case 'collection':
-        return <CollectionForm uid={uid} setUid={setUid} langcode={langcode} setLangcode={setLangcode} setPatternInvalid={setPatternInvalid} patternInvalid={patternInvalid} {...props} />;
+        return <CollectionForm
+          uid={uid}
+          setUid={setUid}
+          langcode={langcode}
+          setLangcode={setLangcode}
+          setPatternInvalid={setPatternInvalid}
+          patternInvalid={patternInvalid}
+          {...props}
+        />;
       case 'custom':
         return <CustomForm uid={uid} setUid={setUid} {...props} />;
       default:
@@ -109,7 +117,11 @@ const ModalForm = (props) => {
               <Flex>
                 <Tabs style={{ marginLeft: 'auto' }}>
                   <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Basic.Title', defaultMessage: 'Basic settings' })}</Tab>
-                  <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Advanced.Title', defaultMessage: 'Advanced settings' })}</Tab>
+                  <Tab>{formatMessage({
+                    id: 'sitemap.Modal.Tabs.Advanced.Title',
+                    defaultMessage: 'Advanced settings',
+                  })}
+                  </Tab>
                 </Tabs>
               </Flex>
 

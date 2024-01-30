@@ -29,6 +29,9 @@ const CustomRow = ({ openModal, entry }) => {
         <Typography variant="omega" textColor="neutral800">{entry.pattern}</Typography>
       </Td>
       <Td>
+        <Typography variant="omega" textColor="neutral800">{entry.subTypeNewsName}</Typography>
+      </Td>
+      <Td>
         <Flex>
           <IconButton onClick={handleEditClick} label="Edit" noBorder icon={<Pencil />} />
           <Box paddingLeft={1}>

@@ -13,8 +13,7 @@ module.exports = {
     const formattedFields = {};
 
     Object.values(strapi.contentTypes).map(async (contentType) => {
-      const fields = await getService('pattern').getAllowedFields(contentType);
-      formattedFields[contentType.uid] = fields;
+      formattedFields[contentType.uid] = await getService('pattern').getAllowedFields(contentType);
     });
 
     ctx.send(formattedFields);

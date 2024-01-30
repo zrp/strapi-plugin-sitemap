@@ -32,6 +32,7 @@ const ListComponent = (props) => {
       formattedItem.name = key;
       formattedItem.langcode = langKey;
       formattedItem.pattern = langItem.get('pattern');
+      formattedItem.subTypeNewsName = langItem.get('subTypeNewsName');
       formattedItem.onDelete = onDelete;
 
       formattedItems.push(formattedItem);
@@ -59,6 +60,9 @@ const ListComponent = (props) => {
           </Th>
           <Th>
             <Typography variant="sigma">Pattern</Typography>
+          </Th>
+          <Th>
+            <Typography variant="sigma">News Name</Typography>
           </Th>
           <Th>
             <VisuallyHidden>Actions</VisuallyHidden>

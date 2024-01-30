@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
+                xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
                 xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
                 xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -27,9 +28,9 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <div id="footer">
-          <p>Generated with a <a href="https://github.com/boazpoolman/strapi-plugin-sitemap" target="_blank">sitemap plugin</a> for Strapi CMS.</p>
-        </div>
+<!--        <div id="footer">-->
+<!--          <p>Generated with a <a href="https://github.com/boazpoolman/strapi-plugin-sitemap" target="_blank">sitemap plugin</a> for Strapi CMS.</p>-->
+<!--        </div>-->
       </body>
     </html>
   </xsl:template>
@@ -75,6 +76,10 @@
           <!-- Show this header only if image:image elements are present -->
           <xsl:if test="sitemap:urlset/sitemap:url/image:image">
             <th>Images</th>
+          </xsl:if>
+          <!-- Show this header only if news:news elements are present -->
+          <xsl:if test="sitemap:urlset/sitemap:url/news:news">
+            <th>News</th>
           </xsl:if>
         </tr>
       </thead>
@@ -145,6 +150,12 @@
               <xsl:apply-templates select="image:image"/>
             </ul>
           </xsl:if>
+        </td>
+      </xsl:if>
+      <!-- Show this column only if news:news elements are present -->
+      <xsl:if test="/sitemap:urlset/sitemap:url/news:news">
+        <td>
+          <xsl:value-of select="news:news/news:title"/>
         </td>
       </xsl:if>
     </tr>
